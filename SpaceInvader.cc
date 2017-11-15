@@ -85,8 +85,8 @@ struct tDisparo{			//Estructura de los disparos
   invA[1]= esat::SubSprite(hoja, 24, 85, 24, 16);
   invB[0]= esat::SubSprite(hoja, 48, 85, 22, 16);
   invB[1]= esat::SubSprite(hoja, 70, 85, 22, 16);
-  invC[0]= esat::SubSPrite(hoja, 92, 85, 16, 16);
-  incC[1]= esat::SubSPrite(hoja, 108, 85, 16, 16);
+  invC[0]= esat::SubSprite(hoja, 92, 85, 16, 16);
+  invC[1]= esat::SubSprite(hoja, 108, 85, 16, 16);
 
 } 
 
@@ -95,7 +95,7 @@ void CargaSprites(){
     hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
-    Cargarenemigos();
+    CargarEnemigos();
 
       for (int i=0; i<50; ++i){
     if (i< 10){
