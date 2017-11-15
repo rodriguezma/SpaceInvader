@@ -36,6 +36,47 @@
 
 
 
+/*struct tJugador{			//Estructura nave del jugador
+
+	esat::SpiteHandle cuerpo[2]	//Sprites de la nave 0=viva | 1=muerta
+	int px1,py1;			//Esquina superior izq
+	int px2,py2;			//Esquina inferior der
+	bool cargado;			//true=listo para disparar | falso=no puede disparar
+	int vidas;			//Intentos restantes
+
+}
+
+struct tEnemigo{			//Enemigo base
+
+	esat::SpiteHandle cuerpo[2]	//Sprites de la nave 0 y 1 para la animación
+	int px1,py1;			//Esquina superior izq
+	int px2,py2;			//Esquina inferior der
+	bool cargado=true;		//true=listo para disparar | falso=no puede disparar
+	int puntos;			//Cantidad de puntos que se añaden al jugador al destruir a este enemigo
+	int velocidad;			//velocidad de desplazamiento de la nave, aunmenta con los niveles
+
+}
+
+struct tEnemigoEspecial{		//Nave de bonificación
+
+	esat::SpiteHandle cuerpo	
+	int px1,py1;			//Esquina superior izq
+	int px2,py2;			//Esquina inferior der
+	int puntos=100;			//Cantidad de puntos que se añaden al jugador al destruir a este enemigo
+	int salir;			//Factor random
+	bool espera=true;		//true=La nave está en espera | la nave está activa en la pantalla
+
+}
+
+struct tDisparo{			//Estructura de los disparos
+
+	esat::SpiteHandle cuerpo	
+	int px1,py1;			//Esquina superior izq
+	int px2,py2;			//Esquina inferior der
+	int id;				//quien dispara 0=jugador | 1=marciano
+
+}*/
+
 
 //////FUNCIONES//////
   void CargarEnemigos(){
@@ -55,6 +96,7 @@ void CargaSprites(){
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
     Cargarenemigos();
+<<<<<<< HEAD
 
 }
 
@@ -68,6 +110,20 @@ void InitMarcianos(){
       else
         enemies[i].tipo=1;
 
+=======
+	
+	for (int i=0; i<50; ++i){
+		if (i< 10){
+			enemies[i].sprite = invC[0];
+		
+		}else if (i>=10 && i<30){
+			enemies[i].sprite = invB[0];
+			
+		}else if (i>=30 && i<50){
+			enemies[i].sprite = invA[0];
+		}
+	}	
+>>>>>>> b45227eb35f989630dc86f7c2125eed9f9f17785
   }
 }
 
