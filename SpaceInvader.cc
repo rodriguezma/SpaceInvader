@@ -16,6 +16,11 @@
  esat::SpriteHandle hoja;
  esat::SpriteHandle invA[2], invB[2], invC[2];
 
+ int Wwhidth=800;
+ int Wheight=600;
+
+ int auxM=4;
+
 //////ESTRUCTURAS//////
  
  struct Player{
@@ -112,6 +117,9 @@ void CargaSprites(){
 }
 
 void InitMarcianos(){
+
+  int a=Wwhidth/4;
+
   for(int i=0;i<5;i++){
    for(int j=0;j<10;j++){
      int t;
@@ -123,20 +131,33 @@ void InitMarcianos(){
       t=1;
 
       enemies[i*10+j].tipo=t;
-      enemies[i*10+j].x=5+j*30;
+      enemies[i*10+j].x=a+5+j*30;
       enemies[i*10+j].y=10+i*25;
 
     }
   } 
 }
 
+void MovMarcianos(){
+
+  for(int i=0;i<10;i++){
+    enemies[auxM*10+i].x+=2;
+  }
+  
+  if(auxM==0)
+    auxM=4;
+  else
+    auxM--;
+
+}
+
 
   void MovPlayer(void){
 
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
-      --player1.x;
+      player1.x-=3;
     }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
-      ++player1.x;
+      player1.x+=4;
     }
 
   }
@@ -166,7 +187,7 @@ int esat::main(int argc, char **argv) {
   //ejemplo1.load("./Recursos/Audio/ogg/dp_frogger_extra.ogg");
   //ejemplo2.load("./Recursos/Audio/ogg/dp_frogger_start.ogg");
  
-  esat::WindowInit(800,600);
+  esat::WindowInit(Wwhidth,Wheight);
   WindowSetMouseVisibility(true);
 
   CargaSprites();
@@ -180,7 +201,7 @@ int esat::main(int argc, char **argv) {
    
 
     MovPlayer();
-  
+    MovMarcianos();
     UpdateFrame();
 
 
