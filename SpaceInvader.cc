@@ -155,9 +155,9 @@ void MovMarcianos(){
   void MovPlayer(void){
 
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
-      player1.x-=3;
+      player1.x-=5;
     }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
-      player1.x+=4;
+      player1.x+=6;
     }
 
   }
