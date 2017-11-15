@@ -185,13 +185,16 @@ void BordeMarcianos(){
 
 
   void MovPlayer(void){
+  int a=Wwhidth/4;
+  int b=a*3;
+    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x > a){
 
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
+      player1.x-=8;
 
-      player1.x-=6;
-
-    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
-      player1.x+=6;
+    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < b){
+      
+      player1.x+=8;
+    
     }
 
   }
