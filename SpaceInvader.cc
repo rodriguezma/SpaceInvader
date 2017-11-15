@@ -12,6 +12,28 @@
  //Declaración variables canal audio.
  SoLoud::Wav ejemplo1,ejemplo2;
 
+//////ESTRUCTURAS//////
+ struct Player{
+
+    int x=400;
+    int y=500;
+    esat::SpriteHandle sprite;
+
+  };
+
+  struct Player player1;
+//////FUNCIONES//////
+
+  void MovPlayer(void){
+
+    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
+      --player1.x;
+    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
+      ++player1.x;
+    }
+
+  }
+
 
 int esat::main(int argc, char **argv) {
  
@@ -26,14 +48,21 @@ int esat::main(int argc, char **argv) {
  
   esat::WindowInit(800,600);
   WindowSetMouseVisibility(true);
+
   
 
   while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
-	last_time = esat::Time();
-	
-	esat::DrawBegin();
+    last_time = esat::Time();
+    esat::DrawBegin();
     esat::DrawClear(0,0,0);
    
+
+
+
+
+
+
+   /*
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)){
       canal.play(ejemplo1); //Inicia reproducción canal
     }
@@ -46,6 +75,7 @@ int esat::main(int argc, char **argv) {
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Space)){
       ejemplo2.stop();
     }
+    */
     
     esat::DrawEnd();
 	
