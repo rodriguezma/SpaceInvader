@@ -43,7 +43,7 @@ int esat::main(int argc, char **argv) {
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Up)){
       canal.play(ejemplo2);
     }
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Down)){
+    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Space)){
       ejemplo2.stop();
     }
     
