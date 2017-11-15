@@ -20,6 +20,15 @@
     esat::SpriteHandle sprite;
 
   };
+  
+  
+  struct marcianitos{
+	int x, y;
+	
+};
+typedef struct marcianitos marcianitos
+marcianitos enemies[50];
+
 
   struct Player player1;
 //////FUNCIONES//////
