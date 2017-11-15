@@ -4,39 +4,51 @@
 #include <esat/input.h>
 #include <esat/time.h>
 
-
 #include <esat_extra/soloud/soloud.h>
 #include <esat_extra/soloud/soloud_wav.h>
+
+#include <stdio.h>
 
  SoLoud::Soloud canal;
  //Declaración variables canal audio.
  SoLoud::Wav ejemplo1,ejemplo2;
+ 
+ esat::SpriteHandle spritesheet;
 
 //////ESTRUCTURAS//////
+ 
  struct Player{
 
     int x=400;
     int y=500;
     esat::SpriteHandle sprite;
 
-  };
-
-
-struct aadsfa{
-  int a;
-};
-
+  }player1;
  
   struct marcianitos{
-	int x, y;
+	
+  int x, y;
+  esat::SpriteHandle sprite;
 	
 };
-typedef struct marcianitos marcianitos
+
+typedef struct marcianitos marcianitos;
+
 marcianitos enemies[50];
 
 
   struct Player player1;
+
+
 //////FUNCIONES//////
+
+void CargaSprites(){
+
+    spritesheet=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
+    player1.sprite=esat::SubSprite(spritesheet, 48, 64, 26, 16);
+
+  }
+
 
   void MovPlayer(void){
 
@@ -63,28 +75,41 @@ marcianitos enemies[50];
 }	
 
 
+  void UpdateFrame(){
+
+    esat::DrawSprite(player1.sprite,player1.x,player1.y);
+
+  }
+
 int esat::main(int argc, char **argv) {
- 
+  
+  
+
+
   double current_time,last_time;
   unsigned char fps=25;
 
   //Inicialicización sistema audio.
-  canal.init();
+  //canal.init();
   //Carga audio en cada variable canal audio.
-  ejemplo1.load("./Recursos/Audio/ogg/dp_frogger_extra.ogg");
-  ejemplo2.load("./Recursos/Audio/ogg/dp_frogger_start.ogg");
+  //ejemplo1.load("./Recursos/Audio/ogg/dp_frogger_extra.ogg");
+  //ejemplo2.load("./Recursos/Audio/ogg/dp_frogger_start.ogg");
  
   esat::WindowInit(800,600);
   WindowSetMouseVisibility(true);
 
-  
+  CargaSprites();
 
   while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
+    
     last_time = esat::Time();
     esat::DrawBegin();
     esat::DrawClear(0,0,0);
    
 
+    MovPlayer();
+  
+    UpdateFrame();
 
 
 
