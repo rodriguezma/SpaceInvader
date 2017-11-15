@@ -13,7 +13,8 @@
  //Declaración variables canal audio.
  SoLoud::Wav ejemplo1,ejemplo2;
  
- esat::SpriteHandle spritesheet;
+ esat::SpriteHandle hoja;
+ esat::SpriteHandle invA[2], invB[2], invC[2];
 
 //////ESTRUCTURAS//////
  
@@ -41,11 +42,23 @@ marcianitos enemies[50];
 
 
 //////FUNCIONES//////
+  void Cargarenemigos(){
+  
+  invA[0]= esat::SubSprite(hoja, 0, 85, 24, 16);
+  invA[1]= esat::SubSprite(hoja, 24, 85, 24, 16);
+  invB[0]= esat::SubSprite(hoja, 48, 85, 22, 16);
+  invB[1]= esat::SubSprite(hoja, 70, 85, 22, 16);
+  invC[0]= esat::SubSPrite(hoja, 92, 85, 16, 16);
+  incC[1]= esat::SubSPrite(hoja, 108, 85, 16, 16);
+} 
+
 
 void CargaSprites(){
 
-    spritesheet=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
-    player1.sprite=esat::SubSprite(spritesheet, 48, 64, 26, 16);
+    hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
+    player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
+
+    Cargarenemigos();
 
   }
 
@@ -61,18 +74,6 @@ void CargaSprites(){
   }
   
   
-  void Cargarenemigos(){
-	esat::SpriteHandle hoja, invA[2], invB[2], invC[2];
-
-	hoja=esat::SpriteFromFile("./Tanques/Recursos/Imagenes/SpaceInvaders/spritebox-sprite.png");
-	
-	invA[0]= esat::SubSprite(hoja, 0, 85, 24, 16);
-	invA[1]= esat::SubSprite(hoja, 24, 85, 24, 16);
-	invB[0]= esat::SubSprite(hoja, 48, 85, 22, 16);
-	invB[1]= esat::SubSprite(hoja, 70, 85, 22, 16);
-	invC[0]= esat::SubSPrite(hoja, 92, 85, 16, 16);
-	incC[1]= esat::SubSPrite(hoja, 108, 85, 16, 16);
-}	
 
 
   void UpdateFrame(){
