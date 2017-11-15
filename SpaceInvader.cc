@@ -19,6 +19,7 @@
  int Wwhidth=800;
  int Wheight=600;
 
+ int auxMov=1;
  int auxM=4;
 
 //////ESTRUCTURAS//////
@@ -139,15 +140,46 @@ void InitMarcianos(){
 }
 
 void MovMarcianos(){
-
-  for(int i=0;i<10;i++){
-    enemies[auxM*10+i].x+=2;
-  }
   
-  if(auxM==0)
-    auxM=4;
-  else
-    auxM--;
+  switch(auxMov){
+    case 1:
+      for(int i=0;i<10;i++){
+        enemies[auxM*10+i].x+=4;
+      }
+      if(auxM==0)
+        auxM=4;
+      else
+        auxM--;
+      break;
+    case 2:
+     for(int i=0;i<10;i++){
+        enemies[auxM*10+i].x-=4;
+      }
+      if(auxM==0)
+        auxM=4;
+      else
+        auxM--;
+      break;
+    }
+
+}
+
+void BordeMarcianos(){
+  int a=Wwhidth/4;
+  int b=a*3;
+  
+  if(enemies[0].x < a){
+    for(int i=0;i<50;i++){
+        enemies[i].y+=4;
+      }
+    auxMov=1;
+  }
+  else if(enemies[9].x+esat::SpriteWidth(enemies[9].sprite)>b){
+    for(int i=0;i<50;i++){
+        enemies[i].y+=4;
+      }
+    auxMov=2;
+  } 
 
 }
 
@@ -155,9 +187,9 @@ void MovMarcianos(){
   void MovPlayer(void){
 
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
-      player1.x-=3;
+      player1.x-=6;
     }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
-      player1.x+=4;
+      player1.x+=6;
     }
 
   }
@@ -202,6 +234,7 @@ int esat::main(int argc, char **argv) {
 
     MovPlayer();
     MovMarcianos();
+    BordeMarcianos();
     UpdateFrame();
 
 
