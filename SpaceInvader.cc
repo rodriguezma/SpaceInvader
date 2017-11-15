@@ -21,9 +21,17 @@
 
   };
 
+
 struct aadsfa{
   int a;
 };
+
+  
+  struct Prueba{
+	  int roto,rota
+	  
+  };
+
   
   struct marcianitos{
 	int x, y;
