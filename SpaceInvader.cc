@@ -20,7 +20,10 @@
     esat::SpriteHandle sprite;
 
   };
-  
+
+struct aadsfa{
+  int a;
+};
   
   struct marcianitos{
 	int x, y;
