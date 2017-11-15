@@ -21,6 +21,7 @@
 
  int auxMov=1;
  int auxM=4;
+ int temp=0;
 
 //////ESTRUCTURAS//////
  
@@ -35,10 +36,10 @@
   struct marcianitos{
 	
   int x, y;
-  int tipo;
+  int tipo, anim=0;
   esat::SpriteHandle sprite;
 	
-}enemies[50];
+  }enemies[50];
 
 
 
@@ -102,20 +103,48 @@ void CargaSprites(){
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
     CargarEnemigos();
+	
+		  
+    }
+   
 
-      for (int i=0; i<50; ++i){
-    if (i< 10){
-      enemies[i].sprite = invC[0];
+
+	void InitAnimacion(){
+		for (int i=0; i<50; ++i){
+			if(i%2==0)
+				enemies[i].anim = 1;
+			
+		}	
+}
+
+	void CambiarAnimacion(){
+		
+		for (int i=0; i<50; ++i){
+	if (i< 10){
+      enemies[i].sprite = invC[enemies[i].anim];
     
     }else if (i>=10 && i<30){
-      enemies[i].sprite = invB[0];
+      enemies[i].sprite = invB[enemies[i].anim];
       
     }else if (i>=30 && i<50){
-      enemies[i].sprite = invA[0];
-    }
-  } 
-
-}
+      enemies[i].sprite = invA[enemies[i].anim];
+	}
+		if(enemies[i].anim==0 && temp==5){
+			++enemies[i].anim;
+		}else if(temp==5)
+			--enemies[i].anim;
+		
+		}
+	}
+	
+	void Temporizacion(){
+		
+		++temp;
+		if(temp>5)
+		temp=0;
+		
+	}
+	
 
 void InitMarcianos(){
 
@@ -170,13 +199,13 @@ void BordeMarcianos(){
   
   if(enemies[0].x < a){
     for(int i=0;i<50;i++){
-        enemies[i].y+=2;
+        enemies[i].y+=4;
       }
     auxMov=1;
   }
   else if(enemies[9].x+esat::SpriteWidth(enemies[9].sprite)>b){
     for(int i=0;i<50;i++){
-        enemies[i].y+=2;
+        enemies[i].y+=4;
       }
     auxMov=2;
   } 
@@ -185,19 +214,17 @@ void BordeMarcianos(){
 
 
   void MovPlayer(void){
-  int a=Wwhidth/4;
-  int b=a*3;
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x > a){
 
-      player1.x-=8;
+    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
 
-    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < b){
-      
-      player1.x+=8;
-    
+      player1.x-=6;
+
+    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
+      player1.x+=6;
     }
 
   }
+  
   
   
 
@@ -229,6 +256,7 @@ int esat::main(int argc, char **argv) {
 
   CargaSprites();
   InitMarcianos();
+  InitAnimacion();
 
   while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
     
@@ -236,13 +264,13 @@ int esat::main(int argc, char **argv) {
     esat::DrawBegin();
     esat::DrawClear(0,0,0);
    
-
+	CambiarAnimacion();
     MovPlayer();
     MovMarcianos();
     BordeMarcianos();
     UpdateFrame();
-
-
+	
+	Temporizacion();
 
 
 
