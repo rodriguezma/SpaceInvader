@@ -96,7 +96,18 @@ void CargaSprites(){
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
     Cargarenemigos();
-<<<<<<< HEAD
+
+      for (int i=0; i<50; ++i){
+    if (i< 10){
+      enemies[i].sprite = invC[0];
+    
+    }else if (i>=10 && i<30){
+      enemies[i].sprite = invB[0];
+      
+    }else if (i>=30 && i<50){
+      enemies[i].sprite = invA[0];
+    }
+  } 
 
 }
 
@@ -109,22 +120,7 @@ void InitMarcianos(){
       enemies[i].tipo=2;
       else
         enemies[i].tipo=1;
-
-=======
-	
-	for (int i=0; i<50; ++i){
-		if (i< 10){
-			enemies[i].sprite = invC[0];
-		
-		}else if (i>=10 && i<30){
-			enemies[i].sprite = invB[0];
-			
-		}else if (i>=30 && i<50){
-			enemies[i].sprite = invA[0];
-		}
-	}	
->>>>>>> b45227eb35f989630dc86f7c2125eed9f9f17785
-  }
+	}
 }
 
 
