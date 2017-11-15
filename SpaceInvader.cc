@@ -29,20 +29,16 @@
   struct marcianitos{
 	
   int x, y;
+  int tipo;
   esat::SpriteHandle sprite;
 	
-};
-
-typedef struct marcianitos marcianitos;
-
-marcianitos enemies[50];
+}enemies[50];
 
 
-  struct Player player1;
 
 
 //////FUNCIONES//////
-  void Cargarenemigos(){
+  void CargarEnemigos(){
   
   invA[0]= esat::SubSprite(hoja, 0, 85, 24, 16);
   invA[1]= esat::SubSprite(hoja, 24, 85, 24, 16);
@@ -50,8 +46,8 @@ marcianitos enemies[50];
   invB[1]= esat::SubSprite(hoja, 70, 85, 22, 16);
   invC[0]= esat::SubSPrite(hoja, 92, 85, 16, 16);
   incC[1]= esat::SubSPrite(hoja, 108, 85, 16, 16);
-} 
 
+} 
 
 void CargaSprites(){
 
@@ -60,7 +56,20 @@ void CargaSprites(){
 
     Cargarenemigos();
 
+}
+
+void InitMarcianos(){
+  for(int i=0;i<50;i++){
+    int a=i/10;
+     if(a < 1)
+      enemies[i].tipo=3;
+    else if(a>=1 && a<3)
+      enemies[i].tipo=2;
+      else
+        enemies[i].tipo=1;
+
   }
+}
 
 
   void MovPlayer(void){
