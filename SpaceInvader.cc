@@ -100,7 +100,18 @@ void CargaSprites(){
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
     Cargarenemigos();
-
+	
+	for (int i=0; i<50; ++i){
+		if (i< 10){
+			enemies[i].sprite = invC[0];
+		
+		}else if (i>=10 && i<30){
+			enemies[i].sprite = invB[0];
+			
+		}else if (i>=30 && i<50){
+			enemies[i].sprite = invA[0];
+		}
+	}	
   }
 
 
