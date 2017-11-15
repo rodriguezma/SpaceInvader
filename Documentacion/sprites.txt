@@ -1,0 +1,95 @@
+Muro1 {
+  background-position: -0px -0px;
+  height: 32px;
+  width: 44px
+}
+
+Muro2 {
+  background-position: -44px -0px;
+  height: 32px;
+  width: 44px
+}
+
+Muro3 {
+  background-position: -0px -32px;
+  height: 32px;
+  width: 44px
+}
+
+Muro4 {
+  background-position: -44px -32px;
+  height: 32px;
+  width: 44px
+}
+
+Muro5 {
+  background-position: -88px -0px;
+  height: 32px;
+  width: 36px
+}
+
+Enemigo especial {
+  background-position: -0px -64px;
+  height: 21px;
+  width: 48px
+}
+
+Nave rota {
+  background-position: -88px -32px;
+  height: 17px;
+  width: 30px
+}
+
+Nave {
+  background-position: -48px -64px;
+  height: 16px;
+  width: 26px
+}
+
+Explosion {
+  background-position: -74px -64px;
+  height: 16px;
+  width: 26px
+}
+
+Inv1a {
+  background-position: -0px -85px;
+  height: 16px;
+  width: 24px
+}
+
+Inv1b {
+  background-position: -24px -85px;
+  height: 16px;
+  width: 24px
+}
+
+Inv2a {
+  background-position: -48px -85px;
+  height: 16px;
+  width: 22px
+}
+
+Inv2b {
+  background-position: -70px -85px;
+  height: 16px;
+  width: 22px
+}
+
+Inv3a {
+  background-position: -92px -85px;
+  height: 16px;
+  width: 16px
+}
+
+Inv3b {
+  background-position: -108px -85px;
+  height: 16px;
+  width: 16px
+}
+
+Disparo {
+  background-position: -118px -32px;
+  height: 12px;
+  width: 6px
+}
