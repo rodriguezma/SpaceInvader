@@ -112,15 +112,22 @@ void CargaSprites(){
 }
 
 void InitMarcianos(){
-  for(int i=0;i<50;i++){
-    int a=i/10;
-     if(a < 1)
-      enemies[i].tipo=3;
-    else if(a>=1 && a<3)
-      enemies[i].tipo=2;
+  for(int i=0;i<5;i++){
+   for(int j=0;j<10;j++){
+     int t;
+     if(i < 1)
+      t=3;
+    else if(i>=1 && i<3)
+      t=2;
       else
-        enemies[i].tipo=1;
-	}
+      t=1;
+
+      enemies[i*10+j].tipo=t;
+      enemies[i*10+j].x=5+j*30;
+      enemies[i*10+j].y=10+i*25;
+
+    }
+  } 
 }
 
 
@@ -140,6 +147,8 @@ void InitMarcianos(){
   void UpdateFrame(){
 
     esat::DrawSprite(player1.sprite,player1.x,player1.y);
+    for(int i=0;i<50;i++)
+      esat::DrawSprite(enemies[i].sprite,enemies[i].x,enemies[i].y);
 
   }
 
@@ -161,6 +170,7 @@ int esat::main(int argc, char **argv) {
   WindowSetMouseVisibility(true);
 
   CargaSprites();
+  InitMarcianos();
 
   while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
     
