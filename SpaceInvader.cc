@@ -170,13 +170,13 @@ void BordeMarcianos(){
   
   if(enemies[0].x < a){
     for(int i=0;i<50;i++){
-        enemies[i].y+=4;
+        enemies[i].y+=2;
       }
     auxMov=1;
   }
   else if(enemies[9].x+esat::SpriteWidth(enemies[9].sprite)>b){
     for(int i=0;i<50;i++){
-        enemies[i].y+=4;
+        enemies[i].y+=2;
       }
     auxMov=2;
   } 
