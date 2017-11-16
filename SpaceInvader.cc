@@ -8,6 +8,7 @@
 #include <esat_extra/soloud/soloud_wav.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
  SoLoud::Soloud canal;
  //Declaración variables canal audio.
@@ -15,14 +16,8 @@
  
  esat::SpriteHandle hoja;
  esat::SpriteHandle invA[2], invB[2], invC[2];
-
- int Wwhidth=800;
- int Wheight=600;
-
- int auxMov=1;
- int auxM=4;
- int temp=0;
-
+ int points = 0;
+ char pointsSTR[25];
 //////ESTRUCTURAS//////
  
  struct Player{
@@ -36,10 +31,10 @@
   struct marcianitos{
 	
   int x, y;
-  int tipo, anim=0;
+  int tipo;
   esat::SpriteHandle sprite;
 	
-  }enemies[50];
+}enemies[50];
 
 
 
@@ -103,53 +98,22 @@ void CargaSprites(){
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
 
     CargarEnemigos();
-	
-		  
-    }
-   
 
-
-	void InitAnimacion(){
-		for (int i=0; i<50; ++i){
-			if(i%2==0)
-				enemies[i].anim = 1;
-			
-		}	
-}
-
-	void CambiarAnimacion(){
-		
-		for (int i=0; i<50; ++i){
-	if (i< 10){
-      enemies[i].sprite = invC[enemies[i].anim];
+      for (int i=0; i<50; ++i){
+    if (i< 10){
+      enemies[i].sprite = invC[0];
     
     }else if (i>=10 && i<30){
-      enemies[i].sprite = invB[enemies[i].anim];
+      enemies[i].sprite = invB[0];
       
     }else if (i>=30 && i<50){
-      enemies[i].sprite = invA[enemies[i].anim];
-	}
-		if(enemies[i].anim==0 && temp==5){
-			++enemies[i].anim;
-		}else if(temp==5)
-			--enemies[i].anim;
-		
-		}
-	}
-	
-	void Temporizacion(){
-		
-		++temp;
-		if(temp>5)
-		temp=0;
-		
-	}
-	
+      enemies[i].sprite = invA[0];
+    }
+  } 
+
+}
 
 void InitMarcianos(){
-
-  int a=Wwhidth/4;
-
   for(int i=0;i<5;i++){
    for(int j=0;j<10;j++){
      int t;
@@ -161,70 +125,23 @@ void InitMarcianos(){
       t=1;
 
       enemies[i*10+j].tipo=t;
-      enemies[i*10+j].x=a+5+j*30;
+      enemies[i*10+j].x=5+j*30;
       enemies[i*10+j].y=10+i*25;
 
     }
   } 
 }
 
-void MovMarcianos(){
-  
-  switch(auxMov){
-    case 1:
-      for(int i=0;i<10;i++){
-        enemies[auxM*10+i].x+=4;
-      }
-      if(auxM==0)
-        auxM=4;
-      else
-        auxM--;
-      break;
-    case 2:
-     for(int i=0;i<10;i++){
-        enemies[auxM*10+i].x-=4;
-      }
-      if(auxM==0)
-        auxM=4;
-      else
-        auxM--;
-      break;
-    }
-
-}
-
-void BordeMarcianos(){
-  int a=Wwhidth/4;
-  int b=a*3;
-  
-  if(enemies[0].x < a){
-    for(int i=0;i<50;i++){
-        enemies[i].y+=4;
-      }
-    auxMov=1;
-  }
-  else if(enemies[9].x+esat::SpriteWidth(enemies[9].sprite)>b){
-    for(int i=0;i<50;i++){
-        enemies[i].y+=4;
-      }
-    auxMov=2;
-  } 
-
-}
-
 
   void MovPlayer(void){
 
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
-
-      player1.x-=6;
-
+      --player1.x;
     }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 800){
-      player1.x+=6;
+      ++player1.x;
     }
 
   }
-  
   
   
 
@@ -251,26 +168,29 @@ int esat::main(int argc, char **argv) {
   //ejemplo1.load("./Recursos/Audio/ogg/dp_frogger_extra.ogg");
   //ejemplo2.load("./Recursos/Audio/ogg/dp_frogger_start.ogg");
  
-  esat::WindowInit(Wwhidth,Wheight);
+  esat::WindowInit(800,600);
   WindowSetMouseVisibility(true);
 
   CargaSprites();
   InitMarcianos();
-  InitAnimacion();
+  
+  esat::DrawSetTextFont("./Recursos/Fuentes/space_invaders.ttf");
+  esat::DrawSetTextSize(25.0f);
+  esat::DrawSetFillColor(255,255,255);
 
   while(esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape)) {
     
     last_time = esat::Time();
+		itoa(points,pointsSTR,10);
     esat::DrawBegin();
     esat::DrawClear(0,0,0);
-   
-	CambiarAnimacion();
-    MovPlayer();
-    MovMarcianos();
-    BordeMarcianos();
-    UpdateFrame();
 	
-	Temporizacion();
+
+    MovPlayer();
+  
+	//UpdateFrame();
+
+
 
 
 
@@ -288,7 +208,9 @@ int esat::main(int argc, char **argv) {
       ejemplo2.stop();
     }
     */
-    
+    esat::DrawText(100,50,"SCORE:");
+		esat::DrawText(175,50,pointsSTR);
+		esat::DrawText(580,50,"LIVES:");
     esat::DrawEnd();
 	
 	do{
