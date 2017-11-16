@@ -43,7 +43,12 @@
 	
   }enemies[50];
 
-
+  struct especial{
+	 int sx=50, sy=50;
+	 esat::SpriteHandle red;
+	 bool activ=false;
+	 
+  }navesp;
 
 /*struct tJugador{			//Estructura nave del jugador
 
@@ -115,7 +120,7 @@ void CargaSprites(){
 
     hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
-
+navesp.red=esat::SubSprite(hoja, 0, 64, 48, 21);
     CargarEnemigos();
 	
 		  
@@ -243,6 +248,20 @@ void BordeMarcianos(){
 
   }
   
+void EnemigoEspecial(){
+	  if (rand()%1000+1<50){
+		  navesp.activ=true;
+	  }
+  }
+  
+  void Mostrarnave(bool activar){
+	  
+	  if (activar==true && navesp.sx< 700){
+		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
+		  navesp.sx+=4;
+		  
+	  }else{activar=false; navesp.sx=50;}
+  }
   
   
 
@@ -296,6 +315,8 @@ int esat::main(int argc, char **argv) {
 
 	MovMarcianos();
     BordeMarcianos();
+	  EnemigoEspecial();
+	Mostrarnave(navesp.activ);
     UpdateFrame();
 	
 	Temporizacion();
