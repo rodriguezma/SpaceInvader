@@ -125,8 +125,8 @@ void InitMarcianos(){
       t=1;
 
       enemies[i*10+j].tipo=t;
-      enemies[i*10+j].x=5+j*30;
-      enemies[i*10+j].y=10+i*25;
+      enemies[i*10+j].x=200+j*30;
+      enemies[i*10+j].y=100+i*25;
 
     }
   } 
@@ -150,10 +150,16 @@ void InitMarcianos(){
 
 
   void UpdateFrame(){
-
+	
+	esat::DrawText(100,50,"SCORE:");
+	esat::DrawText(175,50,pointsSTR);
+	esat::DrawText(580,50,"LIVES:");
+	
     esat::DrawSprite(player1.sprite,player1.x,player1.y);
     for(int i=0;i<50;i++)
       esat::DrawSprite(enemies[i].sprite,enemies[i].x,enemies[i].y);
+  
+    
 
   }
 
@@ -191,7 +197,7 @@ int esat::main(int argc, char **argv) {
 
     MovPlayer();
   
-	//UpdateFrame();
+	UpdateFrame();
 
 
 
@@ -211,9 +217,7 @@ int esat::main(int argc, char **argv) {
       ejemplo2.stop();
     }
     */
-    esat::DrawText(100,50,"SCORE:");
-		esat::DrawText(175,50,pointsSTR);
-		esat::DrawText(580,50,"LIVES:");
+
     esat::DrawEnd();
 	
 	do{
