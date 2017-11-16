@@ -162,22 +162,25 @@ void CargaSprites(){
 
 void InitMarcianos(){
 
-  int a=Wwhidth/4;
 
   for(int i=0;i<5;i++){
    for(int j=0;j<10;j++){
      int t;
-     if(i < 1)
+     if(i < 1){
+		 	enemies[i*10+j].x=100+j*40 + 4;
       t=3;
-    else if(i>=1 && i<3)
-      t=2;
-      else
-      t=1;
+	 }else if(i>=1 && i<3){
+		enemies[i*10+j].x=100+j*40 + 1;
+		t=2;
+	}
+      else{
+		  enemies[i*10+j].x=100+j*40;
+		t=1;
+	  }
 
       enemies[i*10+j].tipo=t;
+	  enemies[i*10+j].y=100+i*25;
 
-      enemies[i*10+j].x=200+j*40;
-      enemies[i*10+j].y=100+i*25;
 
     }
   } 
