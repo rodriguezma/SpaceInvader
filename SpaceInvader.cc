@@ -176,7 +176,7 @@ void InitMarcianos(){
 
       enemies[i*10+j].tipo=t;
 
-      enemies[i*10+j].x=200+j*30;
+      enemies[i*10+j].x=200+j*40;
       enemies[i*10+j].y=100+i*25;
 
     }
@@ -209,8 +209,8 @@ void MovMarcianos(){
 }
 
 void BordeMarcianos(){
-  int a=Wwhidth/4;
-  int b=a*3;
+  int a=100;
+  int b=700;
   
   if(enemies[0].x < a){
     for(int i=0;i<50;i++){
@@ -230,11 +230,11 @@ void BordeMarcianos(){
 
   void MovPlayer(void){
 
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>200){
+    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>100){
 
       player1.x-=6;
 
-    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 600){
+    }else if (esat::IsSpecialKeyPressed(esat::kSpecialKey_Right) && player1.x + esat::SpriteWidth(player1.sprite) < 700){
       player1.x+=6;
     }
 
