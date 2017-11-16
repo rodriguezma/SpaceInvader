@@ -44,7 +44,7 @@
   }enemies[50];
 
   struct especial{
-	 int sx=50, sy=50;
+	 int sx=50, sy=70;
 	 esat::SpriteHandle red;
 	 bool activ=false;
 	 
@@ -249,18 +249,23 @@ void BordeMarcianos(){
   }
   
 void EnemigoEspecial(){
-	  if (rand()%1000+1<50){
+	  if (rand()%1000+1<3 && navesp.activ==false){
 		  navesp.activ=true;
 	  }
   }
   
-  void Mostrarnave(bool activar){
+  void MostrarEspecial(){
 	  
-	  if (activar==true && navesp.sx< 700){
+	  if (navesp.activ==true && navesp.sx< 700){
 		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
-		  navesp.sx+=4;
+		  navesp.sx+=8;
 		  
-	  }else{activar=false; navesp.sx=50;}
+	  }else{
+		navesp.activ=false; 
+		navesp.sx=50;
+	  }
+	  
+  
   }
   
   
@@ -272,6 +277,7 @@ void EnemigoEspecial(){
 	esat::DrawText(100,50,"SCORE:");
 	esat::DrawText(175,50,itoa(pointsSTR,puntuacion,10));
 	esat::DrawText(580,50,"LIVES:");
+	MostrarEspecial();
 	
     esat::DrawSprite(player1.sprite,player1.x,player1.y);
     for(int i=0;i<50;i++)
@@ -315,8 +321,8 @@ int esat::main(int argc, char **argv) {
 
 	MovMarcianos();
     BordeMarcianos();
-	  EnemigoEspecial();
-	Mostrarnave(navesp.activ);
+	EnemigoEspecial();
+
     UpdateFrame();
 	
 	Temporizacion();
