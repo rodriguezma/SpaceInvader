@@ -8,6 +8,8 @@
 #include <esat_extra/soloud/soloud_wav.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
  SoLoud::Soloud canal;
  //Declaración variables canal audio.
@@ -22,24 +24,37 @@
  int auxMov=1;
  int auxM=4;
  int temp=0;
+ int shootcount=1;
 
 //////ESTRUCTURAS//////
  
- struct Player{
+struct Player{
 
     int x=400;
     int y=500;
     esat::SpriteHandle sprite;
+    bool shooting=false;
 
-  }player1;
+}player1;
  
-  struct marcianitos{
+struct marcianitos{
 	
   int x, y;
   int tipo, anim=0;
+  int r;            //factor random para disparar
+  bool shooting, vivo=true;
   esat::SpriteHandle sprite;
 	
-  }enemies[50];
+}enemies[50];
+
+struct tDisparo{      //Estructura de los disparos
+
+  esat::SpriteHandle sprite;  
+  int px1,py1;      //Esquina superior izq
+  int px2,py2;      //Esquina inferior der
+  int vel=1;        //velocidad del disparo
+
+} shoot[11];
 
 
 
@@ -75,14 +90,7 @@ struct tEnemigoEspecial{		//Nave de bonificación
 
 }
 
-struct tDisparo{			//Estructura de los disparos
-
-	esat::SpiteHandle cuerpo	
-	int px1,py1;			//Esquina superior izq
-	int px2,py2;			//Esquina inferior der
-	int id;				//quien dispara 0=jugador | 1=marciano
-
-}*/
+*/
 
 
 //////FUNCIONES//////
@@ -101,38 +109,41 @@ void CargaSprites(){
 
     hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
+    for(int i=0;i<10;i++){
+        shoot[i].sprite=esat::SubSprite(hoja, 118, 32, 6, 16);
+    }
 
     CargarEnemigos();
 	
 		  
-    }
+}
    
 
 
-	void InitAnimacion(){
+void InitAnimacion(){
 		for (int i=0; i<50; ++i){
 			if(i%2==0)
 				enemies[i].anim = 1;
 			
-		}	
+    }	
 }
 
 	void CambiarAnimacion(){
 		
 		for (int i=0; i<50; ++i){
-	if (i< 10){
-      enemies[i].sprite = invC[enemies[i].anim];
+	     if (i< 10){
+        enemies[i].sprite = invC[enemies[i].anim];
     
-    }else if (i>=10 && i<30){
-      enemies[i].sprite = invB[enemies[i].anim];
-      
-    }else if (i>=30 && i<50){
-      enemies[i].sprite = invA[enemies[i].anim];
-	}
-		if(enemies[i].anim==0 && temp==5){
-			++enemies[i].anim;
-		}else if(temp==5)
-			--enemies[i].anim;
+        }else if (i>=10 && i<30){
+          enemies[i].sprite = invB[enemies[i].anim];
+          
+        }else if (i>=30 && i<50){
+          enemies[i].sprite = invA[enemies[i].anim];
+    	   }
+    		if(enemies[i].anim==0 && temp==5){
+    			++enemies[i].anim;
+    		}else if(temp==5)
+    			--enemies[i].anim;
 		
 		}
 	}
@@ -213,7 +224,7 @@ void BordeMarcianos(){
 }
 
 
-  void MovPlayer(void){
+  void MovPlayer(){
 
     if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)&& player1.x>0){
 
@@ -229,13 +240,67 @@ void BordeMarcianos(){
   
 
 
-  void UpdateFrame(){
+void UpdateFrame(){
 
     esat::DrawSprite(player1.sprite,player1.x,player1.y);
-    for(int i=0;i<50;i++)
+    if(player1.shooting){
+      esat::DrawSprite(shoot[0].sprite,shoot[0].px1,shoot[0].py1);
+    }
+    
+    for(int i=0;i<50;i++){
       esat::DrawSprite(enemies[i].sprite,enemies[i].x,enemies[i].y);
+      if(enemies[i].shooting){
+        esat::DrawSprite(shoot[shootcount].sprite,shoot[shootcount].px1,shoot[shootcount].py1);
+      }
+    }
+      
+}
 
-  }
+void ShootPlayer(){
+
+    if(esat::IsSpecialKeyDown(esat::kSpecialKey_Space)&& !player1.shooting){
+      player1.shooting=true;
+      shoot[0].px1=player1.x+(esat::SpriteWidth(player1.sprite)/2);
+      shoot[0].py1=player1.y;
+      shoot[0].px2=shoot[0].px1+esat::SpriteWidth(shoot[0].sprite);
+      shoot[0].py2=shoot[0].py1+esat::SpriteHeight(shoot[0].sprite);
+    }
+
+    shoot[0].py1-=shoot[0].vel;
+    shoot[0].py2-=shoot[0].vel;
+
+    if(shoot[0].py2<0){
+      player1.shooting=false;
+    }
+
+}
+
+void ShootEnemy(){
+
+    for(int i=0;i<50;i++){
+      enemies[i].r=rand()%50;
+      if( enemies[i].r<=10 ){
+        if((i>=40 && enemies[i].vivo && !enemies[i].shooting) && shootcount<9){
+          shootcount++;
+          enemies[i].shooting=true;
+          shoot[shootcount].px1=enemies[i].x+(esat::SpriteWidth(enemies[i].sprite)/2);
+          shoot[shootcount].py1=enemies[i].y+(esat::SpriteHeight(enemies[i].sprite));
+          shoot[shootcount].px2=shoot[shootcount].px1+esat::SpriteWidth(shoot[shootcount].sprite);
+          shoot[shootcount].py2=shoot[shootcount].py1+esat::SpriteHeight(shoot[shootcount].sprite);
+        }
+
+      }
+      shoot[shootcount].py1+=shoot[0].vel;
+      shoot[shootcount].py2+=shoot[0].vel;
+      if(shoot[shootcount].py1>Wheight && shootcount>0){
+          enemies[i].shooting=false;
+          shootcount--;
+          printf("PASA\n");
+        }
+    }
+
+}
+
 
 int esat::main(int argc, char **argv) {
   
@@ -254,6 +319,7 @@ int esat::main(int argc, char **argv) {
   esat::WindowInit(Wwhidth,Wheight);
   WindowSetMouseVisibility(true);
 
+  srand(time(NULL));
   CargaSprites();
   InitMarcianos();
   InitAnimacion();
@@ -268,7 +334,10 @@ int esat::main(int argc, char **argv) {
     MovPlayer();
     MovMarcianos();
     BordeMarcianos();
+    ShootPlayer();
+    ShootEnemy();
     UpdateFrame();
+    printf("%d\n",shootcount);
 	
 	Temporizacion();
 
