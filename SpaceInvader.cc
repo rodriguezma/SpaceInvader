@@ -48,7 +48,7 @@
 	 int sx=50, sy=70;
 	 esat::SpriteHandle red;
 	 bool activ=false;
-	 
+	 int dir=0;
   }navesp;
   
   struct Proteccion{
@@ -139,14 +139,6 @@ void CargaSprites(){
 	CargarMuro();
 		  
     }
-   
-
-void MostrarMuro(){
-	for (int i=0; i<4; ++i){
-		muro[i].protec= barrera[muro[i].estado];
-			
-	}	
-}   
    
   
    
@@ -290,20 +282,23 @@ void EnemigoEspecial(){
   
 void MostrarEspecial(){
 	  
-	  if (navesp.activ==true && navesp.sx< 700){
+	  if (navesp.activ == true && navesp.sx < 700 && navesp.dir == 0){
 		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
 		  navesp.sx+=8;
 		  
-	  }else{
-		navesp.activ=false; 
-		navesp.sx=50;
+	  }else if (navesp.activ == true && navesp.sx >= 700 && navesp.dir == 0){
+		  navesp.dir=1; navesp.activ=false;
 	  }
 	  
-  
-  }
-  
-  
-
+	  if (navesp.activ == true && navesp.sx > 100 && navesp.dir == 1){
+		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
+		  navesp.sx-=8;
+	  }else if (navesp.activ == true && navesp.sx <= 100 && navesp.dir == 1){
+		  navesp.dir=0; navesp.activ=false;
+	  }
+		
+	  }
+	  
 
  void UpdateFrame(){
 	
