@@ -16,7 +16,7 @@
  esat::SpriteHandle hoja;
  esat::SpriteHandle invA[2], invB[2], invC[2];
  esat::SpriteHandle barrera[5];
-
+ esat::SpriteTransform ST[4];
  int Wwhidth=800;
  int Wheight=600;
 
@@ -142,15 +142,26 @@ void CargaSprites(){
    
 
 void MostrarMuro(){
-	muro[0].mx= 105;
 	for (int i=0; i<4; ++i){
 		muro[i].protec= barrera[muro[i].estado];
-		if(i>0)
-			muro[i].mx= muro[i-1].mx+180;	
+			
 	}	
 }   
    
-
+  
+   
+void EscalarMuro(){
+	ST[0].x=105;
+	for (int i=0; i<4; ++i){
+		ST[i].y=430;
+		ST[i].scale_x= 2;
+		ST[i].scale_y= 1.5;
+		muro[i].protec= barrera[muro[i].estado];
+		if (i>0)
+			ST[i].x= ST[i-1].x+170;
+		
+		}	
+	}
 
 void InitAnimacion(){
 		for (int i=0; i<50; ++i){
@@ -307,7 +318,7 @@ void MostrarEspecial(){
       esat::DrawSprite(enemies[i].sprite,enemies[i].x,enemies[i].y);
   
 	for(int i=0; i<4; ++i)
-		esat::DrawSprite(muro[i].protec, muro[i].mx, muro[i].my);
+		esat::DrawSprite(muro[i].protec, ST[i]);
 	
   }
 
@@ -331,6 +342,7 @@ int esat::main(int argc, char **argv) {
   CargaSprites();
   InitMarcianos();
   InitAnimacion();
+  EscalarMuro();
   esat::DrawSetTextFont("./Recursos/Fuentes/space_invaders.ttf");
   esat::DrawSetFillColor(255,255,255,255);
 
@@ -342,8 +354,6 @@ int esat::main(int argc, char **argv) {
    
 	CambiarAnimacion();
     MovPlayer();
-	MostrarMuro();
-
 	MovMarcianos();
     BordeMarcianos();
 	EnemigoEspecial();
