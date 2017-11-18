@@ -11,7 +11,7 @@
 
  SoLoud::Soloud canal;
  //Declaración variables canal audio.
- SoLoud::Wav ejemplo1,ejemplo2;
+ SoLoud::Wav disparo, movimiento[4],Pdeath,Edeath,ufo;
  
  esat::SpriteHandle hoja, explosion,explosionNave;
  esat::SpriteHandle invA[2], invB[2], invC[2];
@@ -27,6 +27,7 @@
  float pointsSTR=0;
  char vidasSTR[3];
  char puntuacion[10];
+ int movsound=0;
 
 //////ESTRUCTURAS//////
  
@@ -72,9 +73,10 @@ struct tDisparo j1disparo;
   }navesp;
   
   struct Proteccion{
-	  int mx,my=450;
+	  int mx=105,my=430;
 	  int estado=0;
-	  esat::SpriteHandle protec;  
+	  esat::SpriteHandle protec;
+    bool vivo=true;  
   }muro[4];
 
 /*struct tJugador{			//Estructura nave del jugador
@@ -147,14 +149,14 @@ void CargarMuro(){
 	barrera[0]= esat::SubSprite(hoja, 44, 32, 44, 32);
 	barrera[1]= esat::SubSprite(hoja, 0, 0, 44, 32);
 	barrera[2]= esat::SubSprite(hoja, 44, 0, 44, 32);
-	barrera[3]= esat::SubSprite(hoja, 88, 0, 36, 32);
-	barrera[4]= esat::SubSprite(hoja, 0, 32, 44, 32);	
+	barrera[3]= esat::SubSprite(hoja, 0, 32, 44, 32);
+	barrera[4]= esat::SubSprite(hoja, 88, 0, 36, 32);
 }
 
 void CargaSprites(){
     hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
-    navesp.red=esat::SubSprite(hoja, 0, 64, 48, 21);
+    navesp.red=esat::SubSprite(hoja, 0, 64, 48, 20);
 
     for(int i=0;i<10;i++){
         shoot[i].sprite=esat::SubSprite(hoja, 118, 32, 6, 16);
@@ -168,19 +170,29 @@ void CargaSprites(){
 
 		  
     }
+	
+void CargarAudio(){
+	Edeath.load ("./Recursos/InvadersSounds/shoot.wav");
+	Pdeath.load ("./Recursos/InvadersSounds/explosion.wav");
+	disparo.load ("./Recursos/InvadersSounds/invaderkilled.wav");
+	ufo.load("./Recursos/InvadersSounds/ufo_lowpitch.wav");
+	movimiento[0].load("./Recursos/InvadersSounds/fastinvader1.wav");
+	movimiento[1].load("./Recursos/InvadersSounds/fastinvader2.wav");
+	movimiento[2].load("./Recursos/InvadersSounds/fastinvader3.wav");
+	movimiento[3].load("./Recursos/InvadersSounds/fastinvader4.wav");
+}
 
   
-   
 void EscalarMuro(){
-	ST[0].x=105;
+	
 	for (int i=0; i<4; ++i){
-		ST[i].y=430;
+    muro[i].mx+=170*i;
+    ST[i].x=muro[i].mx;
+		ST[i].y=muro[i].my;
 		ST[i].scale_x= 2;
 		ST[i].scale_y= 1.5;
 		muro[i].protec= barrera[muro[i].estado];
-		if (i>0)
-			ST[i].x= ST[i-1].x+170;
-		
+
 		}	
 	}
 
@@ -215,11 +227,17 @@ void CambiarAnimacion(){
 void Temporizacion(){
 		
 	++temp;
-	if(temp>5)
+	if(temp>25)
 		temp=0;
 		
 	}
 	
+void SonidoMov(){
+	if (temp==25){
+		canal.play(movimiento[movsound]);
+		++movsound%=4;
+	}	
+}
 
 void InitMarcianos(){
 
@@ -311,6 +329,7 @@ void MovPlayer(void){
 void EnemigoEspecial(){
 	  if (rand()%1000+1<3 && navesp.activ==false){
 		  navesp.activ=true;
+		  canal.play(ufo);
 	  }
   }
   
@@ -318,14 +337,14 @@ void MostrarEspecial(){
 	  
 	  if (navesp.activ == true && navesp.sx < 700 && navesp.dir == 0){
 		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
-		  navesp.sx+=8;
+		  navesp.sx+=10;
 		  
 	  }else if (navesp.activ == true && navesp.sx >= 700 && navesp.dir == 0){
 		  navesp.dir=1; navesp.activ=false;
 	  }
     if (navesp.activ == true && navesp.sx > 100 && navesp.dir == 1){
 		  esat::DrawSprite (navesp.red, navesp.sx, navesp.sy);
-		  navesp.sx-=8;
+		  navesp.sx-=10;
 	  }else if (navesp.activ == true && navesp.sx <= 100 && navesp.dir == 1){
 		  navesp.dir=0; navesp.activ=false;
 	  }
@@ -367,8 +386,10 @@ void UpdateFrame(){
       esat::DrawSprite(shoot[i%10].sprite,shoot[i%10].px1,shoot[i%10].py1);
     }
   }
-    for(int i=0; i<4; ++i)
-    esat::DrawSprite(muro[i].protec, ST[i]);
+    for(int i=0; i<4; ++i){
+      if(muro[i].vivo)
+        esat::DrawSprite(muro[i].protec, ST[i]);
+    }
 }
 
 void ShootPlayer(){
@@ -380,6 +401,7 @@ void ShootPlayer(){
       j1disparo.py1=player1.y - esat::SpriteHeight(j1disparo.sprite);
       j1disparo.px2=j1disparo.px1 + esat::SpriteWidth(j1disparo.sprite);
       j1disparo.py2=j1disparo.py1 + esat::SpriteHeight(j1disparo.sprite);
+	  canal.play(disparo);
 
     }
 }
@@ -405,18 +427,17 @@ void ShootEnemy(){
 
  
 void MovDisparos(){
-
-if (j1disparo.activ){
+  if (j1disparo.activ){
   j1disparo.py1-=j1disparo.vel;
   j1disparo.py2-=j1disparo.vel;
-}
+  }
 
-for(int i=0;i<50;i++){
-  if(enemies[i].shooting){
+  for(int i=0;i<50;i++){
+    if(enemies[i].shooting){
     shoot[i%10].py1+=shoot[i%10].vel;
     shoot[i%10].py2+=shoot[i%10].vel;
+    }
   }
-}
 }
 
 void BordesDisparos(){
@@ -449,10 +470,26 @@ void ColMarcianos(){
           enemies[j].vivo=false;
 		  Points(enemies[j]);
           esat::DrawSprite(explosion,enemies[j].x,enemies[j].y);
+		  canal.play(Edeath);
+        
+          if(enemies[j].frontline){
+            int a=j-10;
+            while(!enemies[a].vivo)
+              a-=10;
+            if(a>=0)
+              enemies[a].frontline=true;
+          }
+        }
       }
     }
   }
-} 
+
+void ResetShoots(){
+  for(int i=0;i<10;i++){
+    shoot[i].activ=false;
+    enemies[shoot[i].InxM].shooting=false;
+  }
+}
 
 void ColPlayer(){
   for(int i=0;i<10;i++){
@@ -462,8 +499,9 @@ void ColPlayer(){
         player1.x + esat::SpriteWidth(player1.sprite),
         player1.y + esat::SpriteHeight(player1.sprite))){
           --player1.lives;
+          ResetShoots();
           esat::DrawSprite(explosionNave,player1.x-2,player1.y-1);
-          esat::Sleep(3000);
+          esat::Sleep(1000);
           player1.x=400;
 
     }
@@ -471,16 +509,56 @@ void ColPlayer(){
 }
 
 
+void ColMuros(){
+
+  for(int i=0;i<4;i++){
+    if(muro[i].vivo && j1disparo.activ && Col(j1disparo.px1,j1disparo.py1,
+        j1disparo.px2,j1disparo.py2,
+        muro[i].mx,muro[i].my,
+        muro[i].mx + esat::SpriteWidth(muro[i].protec)*2,
+        (int)(muro[i].my + esat::SpriteHeight(muro[i].protec)*1.5))){
+          j1disparo.activ=false;
+          player1.shooting=false;
+
+
+    }
+  }
+
+  for(int i=0;i<10;i++){
+    for(int j=0;j<4;j++){
+      if(muro[j].vivo && shoot[i].activ && Col(shoot[i].px1,shoot[i].py1,
+        shoot[i].px2,shoot[i].py2,
+        muro[j].mx,muro[j].my,
+        muro[j].mx + esat::SpriteWidth(muro[j].protec)*2,
+        (int)(muro[j].my + esat::SpriteHeight(muro[j].protec)*1.5))){
+          shoot[i].activ=false;
+          enemies[shoot[i].InxM].shooting=false;
+          muro[j].estado++;
+        
+      }
+    }
+  }
+}
+
+void UpdateWalls(){
+  for(int i=0;i<4;i++){
+    if(muro[i].estado<5)
+    muro[i].protec=barrera[muro[i].estado];
+  else
+    muro[i].vivo=false;
+  }
+}
+
+
 int esat::main(int argc, char **argv) {
   
+  j1disparo.vel=10;
   double current_time,last_time;
   unsigned char fps=25;
 
-  //Inicialicización sistema audio.
-  //canal.init();
-  //Carga audio en cada variable canal audio.
-  //ejemplo1.load("./Recursos/Audio/ogg/dp_frogger_extra.ogg");
-  //ejemplo2.load("./Recursos/Audio/ogg/dp_frogger_start.ogg");
+  
+  canal.init();
+  
  
   esat::WindowInit(Wwhidth,Wheight);
   WindowSetMouseVisibility(true);
@@ -489,6 +567,7 @@ int esat::main(int argc, char **argv) {
   InitMarcianos();
   InitAnimacion();
   EscalarMuro();
+  CargarAudio();
   esat::DrawSetTextFont("./Recursos/Fuentes/space_invaders.ttf");
   esat::DrawSetFillColor(255,255,255,255);
 
@@ -511,29 +590,17 @@ int esat::main(int argc, char **argv) {
   BordesDisparos();
   ColMarcianos();
   ColPlayer();
+  ColMuros();
+  UpdateWalls();
+
+  SonidoMov();
+
 
 
     UpdateFrame();
 	
 	Temporizacion();
 
-
-
-
-   /*
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Left)){
-      canal.play(ejemplo1); //Inicia reproducción canal
-    }
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Right)){
-      ejemplo1.stop(); //Finaliza reproducción canal
-    }
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Up)){
-      canal.play(ejemplo2);
-    }
-    if(esat::IsSpecialKeyPressed(esat::kSpecialKey_Space)){
-      ejemplo2.stop();
-    }
-    */
 
     esat::DrawEnd();
 	
