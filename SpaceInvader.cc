@@ -70,9 +70,10 @@ struct tDisparo j1disparo;
   }navesp;
   
   struct Proteccion{
-	  int mx,my=450;
+	  int mx=105,my=430;
 	  int estado=0;
-	  esat::SpriteHandle protec;  
+	  esat::SpriteHandle protec;
+    bool vivo=true;  
   }muro[4];
 
 /*struct tJugador{			//Estructura nave del jugador
@@ -145,8 +146,8 @@ void CargarMuro(){
 	barrera[0]= esat::SubSprite(hoja, 44, 32, 44, 32);
 	barrera[1]= esat::SubSprite(hoja, 0, 0, 44, 32);
 	barrera[2]= esat::SubSprite(hoja, 44, 0, 44, 32);
-	barrera[3]= esat::SubSprite(hoja, 88, 0, 36, 32);
-	barrera[4]= esat::SubSprite(hoja, 0, 32, 44, 32);	
+	barrera[3]= esat::SubSprite(hoja, 0, 32, 44, 32);
+	barrera[4]= esat::SubSprite(hoja, 88, 0, 36, 32);
 }
 
 void CargaSprites(){
@@ -168,17 +169,16 @@ void CargaSprites(){
     }
 
   
-   
 void EscalarMuro(){
-	ST[0].x=105;
+	
 	for (int i=0; i<4; ++i){
-		ST[i].y=430;
+    muro[i].mx+=170*i;
+    ST[i].x=muro[i].mx;
+		ST[i].y=muro[i].my;
 		ST[i].scale_x= 2;
 		ST[i].scale_y= 1.5;
 		muro[i].protec= barrera[muro[i].estado];
-		if (i>0)
-			ST[i].x= ST[i-1].x+170;
-		
+
 		}	
 	}
 
@@ -354,8 +354,10 @@ void MostrarEspecial(){
       esat::DrawSprite(shoot[i%10].sprite,shoot[i%10].px1,shoot[i%10].py1);
     }
   }
-    for(int i=0; i<4; ++i)
-    esat::DrawSprite(muro[i].protec, ST[i]);
+    for(int i=0; i<4; ++i){
+      if(muro[i].vivo)
+        esat::DrawSprite(muro[i].protec, ST[i]);
+    }
 }
 
 void ShootPlayer(){
@@ -391,18 +393,17 @@ void ShootEnemy(){
  }
 
 void MovDisparos(){
-
-if (j1disparo.activ){
+  if (j1disparo.activ){
   j1disparo.py1-=j1disparo.vel;
   j1disparo.py2-=j1disparo.vel;
-}
+  }
 
-for(int i=0;i<50;i++){
-  if(enemies[i].shooting){
+  for(int i=0;i<50;i++){
+    if(enemies[i].shooting){
     shoot[i%10].py1+=shoot[i%10].vel;
     shoot[i%10].py2+=shoot[i%10].vel;
+    }
   }
-}
 }
 
 void BordesDisparos(){
@@ -447,6 +448,13 @@ void ColMarcianos(){
     }
   }
 
+void ResetShoots(){
+  for(int i=0;i<10;i++){
+    shoot[i].activ=false;
+    enemies[shoot[i].InxM].shooting=false;
+  }
+}
+
 void ColPlayer(){
   for(int i=0;i<10;i++){
     if(shoot[i].activ && Col(shoot[i].px1,shoot[i].py1,
@@ -455,8 +463,9 @@ void ColPlayer(){
         player1.x + esat::SpriteWidth(player1.sprite),
         player1.y + esat::SpriteHeight(player1.sprite))){
           --player1.lives;
+          ResetShoots();
           esat::DrawSprite(explosionNave,player1.x-2,player1.y-1);
-          esat::Sleep(3000);
+          esat::Sleep(1000);
           player1.x=400;
 
     }
@@ -465,12 +474,47 @@ void ColPlayer(){
 
 void ColMuros(){
 
-    //x -> 2
-    //y -> 1.5
+  for(int i=0;i<4;i++){
+    if(muro[i].vivo && j1disparo.activ && Col(j1disparo.px1,j1disparo.py1,
+        j1disparo.px2,j1disparo.py2,
+        muro[i].mx,muro[i].my,
+        muro[i].mx + esat::SpriteWidth(muro[i].protec)*2,
+        (int)(muro[i].my + esat::SpriteHeight(muro[i].protec)*1.5))){
+          j1disparo.activ=false;
+          player1.shooting=false;
+
+
+    }
+  }
+
+  for(int i=0;i<10;i++){
+    for(int j=0;j<4;j++){
+      if(muro[j].vivo && shoot[i].activ && Col(shoot[i].px1,shoot[i].py1,
+        shoot[i].px2,shoot[i].py2,
+        muro[j].mx,muro[j].my,
+        muro[j].mx + esat::SpriteWidth(muro[j].protec)*2,
+        (int)(muro[j].my + esat::SpriteHeight(muro[j].protec)*1.5))){
+          shoot[i].activ=false;
+          enemies[shoot[i].InxM].shooting=false;
+          muro[j].estado++;
+        
+      }
+    }
+  }
+}
+
+void UpdateWalls(){
+  for(int i=0;i<4;i++){
+    if(muro[i].estado<5)
+    muro[i].protec=barrera[muro[i].estado];
+  else
+    muro[i].vivo=false;
+  }
 }
 
 int esat::main(int argc, char **argv) {
   
+  j1disparo.vel=10;
   double current_time,last_time;
   unsigned char fps=25;
 
@@ -508,6 +552,8 @@ int esat::main(int argc, char **argv) {
   BordesDisparos();
   ColMarcianos();
   ColPlayer();
+  ColMuros();
+  UpdateWalls();
 
 
     UpdateFrame();
