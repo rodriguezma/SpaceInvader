@@ -549,6 +549,21 @@ void UpdateWalls(){
   }
 }
 
+void ColDisparos(){
+  for(int i=0;i<10;i++){
+    if(shoot[i].activ && j1disparo.activ && Col(shoot[i].px1,shoot[i].py1,
+      shoot[i].px2,shoot[i].py2,
+      j1disparo.px1,j1disparo.py1,
+      j1disparo.px2,j1disparo.py2)){
+        shoot[i].activ=false;
+        j1disparo.activ=false;
+        enemies[shoot[i].InxM].shooting=false;
+        player1.shooting=false;
+    }
+  }
+}
+  
+
 
 int esat::main(int argc, char **argv) {
   
@@ -591,6 +606,7 @@ int esat::main(int argc, char **argv) {
   ColMarcianos();
   ColPlayer();
   ColMuros();
+  ColDisparos();
   UpdateWalls();
 
   SonidoMov();
