@@ -13,7 +13,7 @@
  //Declaración variables canal audio.
  SoLoud::Wav ejemplo1,ejemplo2;
  
- esat::SpriteHandle hoja, explosion;
+ esat::SpriteHandle hoja, explosion,explosionNave;
  esat::SpriteHandle invA[2], invB[2], invC[2];
  esat::SpriteHandle barrera[5];
  esat::SpriteTransform ST[4];
@@ -34,6 +34,7 @@
     int y=500;
     esat::SpriteHandle sprite;
     bool shooting=false;
+    int lives=4;
 
   }player1;
  
@@ -160,6 +161,7 @@ void CargaSprites(){
     CargarEnemigos();
 
     explosion=esat::SubSprite(hoja,74,64,26,16);
+    explosionNave=esat::SubSprite(hoja,88,32,30,17);
     CargarMuro();
 
 		  
@@ -444,8 +446,11 @@ void ColPlayer(){
         player1.x,player1.y,
         player1.x + esat::SpriteWidth(player1.sprite),
         player1.y + esat::SpriteHeight(player1.sprite))){
-          
-          
+          --player1.lives;
+          esat::DrawSprite(explosionNave,player1.x-2,player1.y-1);
+          esat::Sleep(3000);
+          player1.x=400;
+
     }
   }
 }
@@ -488,6 +493,7 @@ int esat::main(int argc, char **argv) {
   MovDisparos();
   BordesDisparos();
   ColMarcianos();
+  ColPlayer();
 
 
     UpdateFrame();
