@@ -23,7 +23,9 @@
  int auxMov=1;
  int auxM=4;
  int temp=0;
+ 
  float pointsSTR=0;
+ char vidasSTR[3];
  char puntuacion[10];
 
 //////ESTRUCTURAS//////
@@ -329,13 +331,24 @@ void MostrarEspecial(){
 	  }
 		
 }
-	  
 
- void UpdateFrame(){
-		
+void Points(marcianitos e){
+	for(int j = 0 ;j<50;++j){
+		if(!e.vivo && j>=0 && j<20) pointsSTR +=10;
+		if(!e.vivo && j>=20 && j<40) pointsSTR += 20;
+		if(!e.vivo && j>=40 && j<50) pointsSTR += 30;
+	}
+	
+}	  
+
+void UpdateFrame(){
+	
+
+	
 	esat::DrawText(100,50,"SCORE:");
 	esat::DrawText(175,50,itoa(pointsSTR,puntuacion,10));
 	esat::DrawText(580,50,"LIVES:");
+	esat::DrawText(625,50,itoa(player1.lives,vidasSTR,10));
 	MostrarEspecial();
 
 
@@ -390,6 +403,7 @@ void ShootEnemy(){
    }
  }
 
+ 
 void MovDisparos(){
 
 if (j1disparo.activ){
@@ -433,6 +447,7 @@ void ColMarcianos(){
           player1.shooting=false;
           j1disparo.activ=false;
           enemies[j].vivo=false;
+		  Points(enemies[j]);
           esat::DrawSprite(explosion,enemies[j].x,enemies[j].y);
       }
     }
@@ -454,6 +469,7 @@ void ColPlayer(){
     }
   }
 }
+
 
 int esat::main(int argc, char **argv) {
   
@@ -487,6 +503,7 @@ int esat::main(int argc, char **argv) {
 	MovMarcianos();
     BordeMarcianos();
 	EnemigoEspecial();
+	
 
   ShootPlayer();
   ShootEnemy();
