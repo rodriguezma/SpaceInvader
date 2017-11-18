@@ -434,10 +434,18 @@ void ColMarcianos(){
           j1disparo.activ=false;
           enemies[j].vivo=false;
           esat::DrawSprite(explosion,enemies[j].x,enemies[j].y);
+        
+          if(enemies[j].frontline){
+            int a=j-10;
+            while(!enemies[a].vivo)
+              a-=10;
+            if(a>=0)
+              enemies[a].frontline=true;
+          }
+        }
       }
     }
   }
-} 
 
 void ColPlayer(){
   for(int i=0;i<10;i++){
@@ -453,6 +461,12 @@ void ColPlayer(){
 
     }
   }
+}
+
+void ColMuros(){
+
+    //x -> 2
+    //y -> 1.5
 }
 
 int esat::main(int argc, char **argv) {
