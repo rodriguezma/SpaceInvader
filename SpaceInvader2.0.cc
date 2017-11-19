@@ -13,7 +13,7 @@
  //Declaración variables canal audio.
  SoLoud::Wav disparo, movimiento[4],Pdeath,Edeath,ufo;
  
- esat::SpriteHandle hoja, explosion,explosionNave, fondo;
+ esat::SpriteHandle hoja, explosion,explosionNave, fondo, Gameover;
  esat::SpriteHandle invA[2], invB[2], invC[2];
  esat::SpriteHandle barrera[5];
  esat::SpriteTransform ST[4];
@@ -38,6 +38,7 @@
     esat::SpriteHandle sprite;
     bool shooting=false;
     int lives=4;
+	bool Gover=false;
 
   }player1;
  
@@ -156,6 +157,7 @@ void CargarMuro(){
 void CargaSprites(){
     hoja=esat::SpriteFromFile("./Recursos/Imagenes/spritebox-sprite.png");
 	fondo=esat::SpriteFromFile("./Recursos/Imagenes/InvadersTitle.png");
+	Gameover=esat::SpriteFromFile("./Recursos/Imagenes/InvadersOver.png");
     player1.sprite=esat::SubSprite(hoja, 48, 64, 26, 16);
     navesp.red=esat::SubSprite(hoja, 0, 64, 48, 20);
 
@@ -246,6 +248,7 @@ void InitMarcianos(){
   for(int i=0;i<5;i++){
    for(int j=0;j<10;j++){
      int t;
+	 enemies[i*10+j].vivo=true;
      if(i < 1){
 		 	enemies[i*10+j].x=100+j*40 + 4;
       t=3;
@@ -551,6 +554,27 @@ void UpdateWalls(){
   }
 }
 
+void GameOver (bool *perder){
+	for (int i=0; i<50; ++i){
+		if ((enemies[i].y>500 && enemies[i].frontline == true) || player1.lives == 0)
+			*perder = true;	
+	}
+		if (*perder)
+			esat::DrawSprite(Gameover, 0, 33);
+		if (esat::IsSpecialKeyDown(esat::kSpecialKey_Enter) && *perder){
+			*perder=false;
+			player1.lives=4;
+			InitMarcianos();
+			pointsSTR=0;
+			for (int i=0; i<40; ++i)
+				enemies[i].frontline=false;
+			for (int j=0; j<4; ++j){
+				muro[j].estado=0;
+				muro[j].vivo=true;
+			}
+		}	
+}
+
 bool InicioJuego(bool *ejec){
 	if (esat::IsSpecialKeyDown(esat::kSpecialKey_Enter))
 		*ejec=true;
@@ -561,8 +585,10 @@ bool InicioJuego(bool *ejec){
 }
 
 
+
+
 void EjecucionJuego(bool ejec){
-	if (ejec==true){
+	if (ejec && !player1.Gover){
 		
 	CambiarAnimacion();
     MovPlayer();
@@ -620,6 +646,8 @@ int esat::main(int argc, char **argv) {
 	InicioJuego(&ejecucion);
 	
 	EjecucionJuego(ejecucion);
+	
+	GameOver(&player1.Gover);
 
 
     esat::DrawEnd();
